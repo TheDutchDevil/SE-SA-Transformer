@@ -1,0 +1,13 @@
+name: sesa
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - pandas
+    - transformers[torch]
+    - sentencepiece
+    - scikit-learn==0.24.0
+    - torchtext<0.9.*
+    - pytorch-ignite

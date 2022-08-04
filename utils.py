@@ -44,7 +44,7 @@ MODELS = [(BertForSequenceClassification,BertTokenizer,'bert-base-cased'),
 MODEL_NAMES = ['bert', 'xlnet', 'Roberta', 'albert']
 
 ## Parameters setting
-BATCH_SIZE=16
+BATCH_SIZE=32
 LEARNING_RATE=2e-5
 MAX_SEQ_LENGTH=256
 SEED=42
@@ -102,7 +102,7 @@ def get_iterator(X_cur, y_cur, cur_model, is_train):
     
     
     cur_dataset = torchtext.data.Dataset(examples, fields)
-    cur_iterator = data.BucketIterator(cur_dataset, batch_size=BATCH_SIZE, device='cuda', shuffle=is_train)
+    cur_iterator = data.BucketIterator(cur_dataset, batch_size=BATCH_SIZE, device=device, shuffle=is_train)
     return cur_iterator
 
 def preprocessing_for_classifier_tensor(sentences, cur_model):
@@ -148,20 +148,7 @@ def preprocessing_for_classifier_list(sentences, cur_model):
     return input_ids, attention_masks
 
  
-def run_saved_model(prediction_dataloader, cur_model, p_name, m_name):
-    model = cur_model[0].from_pretrained(cur_model[2], num_labels=3)
-    model.cuda()
-    # satd_classifier.load_state_dict(torch.load(data_folder/'{}-{}.bin'.format(p_name, m_name)))    
-    # print('{}-{}.bin loaded'.format(p_name, m_name))
-    
-    name_pattern='/sa4se/models/best_{}_{}_*'.format(p_name, m_name)
-    # print(type(glob.glob(name_pattern)))
-    candidates=glob.glob(name_pattern)
-    candidates.sort(reverse=True)
-    file_name=candidates[0]
-    
-    model.load_state_dict(torch.load(file_name))
-    print('{} loaded'.format(file_name))
+def run_model(prediction_dataloader, model):
     
     model.eval()
     predictions, true_labels = [], []
@@ -183,7 +170,7 @@ def run_saved_model(prediction_dataloader, cur_model, p_name, m_name):
         predictions.append(logits)
         true_labels.append(label_ids)
 
-    print('    DONE.')
+    print('DONE.')
 
     flat_predictions = [item for sublist in predictions for item in sublist]
     flat_predictions = np.argmax(flat_predictions, axis=1).flatten()
@@ -193,3 +180,5 @@ def run_saved_model(prediction_dataloader, cur_model, p_name, m_name):
     #print('Recall is {:.3f}'.format(recall_score(flat_true_labels, flat_predictions)))
     #print('F1-score is {:.3f}'.format(f1_score(flat_true_labels, flat_predictions)))    
     print(classification_report(flat_true_labels, flat_predictions))
+
+    return flat_predictions
