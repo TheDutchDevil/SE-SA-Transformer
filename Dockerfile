@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3
+FROM continuumio/miniconda3
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN conda env create -f environment.yml
 RUN echo "conda activate sesa" >> ~/.profile
 
 # Activate the environment, and make sure it's activated:
-SHELL ["/bin/bash", "--login"]
+SHELL ["/bin/bash", "--login", "-c"]
 
 COPY . .
 
