@@ -97,9 +97,9 @@ def process_function(engine, batch):
     model.train()
     optimizer.zero_grad()
     
-    b_input_ids = batch.INPUT_IDS
-    b_input_mask = batch.ATTENTION_MASKS
-    b_labels = batch.LABEL
+    b_input_ids = batch[0]
+    b_input_mask = batch[1]
+    b_labels = batch[2]
         
 
     outputs = model(b_input_ids,
@@ -118,9 +118,9 @@ def process_function(engine, batch):
 def eval_function(engine, batch):
     model.eval()
     with torch.no_grad():
-        b_input_ids = batch.INPUT_IDS
-        b_input_mask = batch.ATTENTION_MASKS
-        b_labels = batch.LABEL
+        b_input_ids = batch[0]
+        b_input_mask = batch[1]
+        b_labels = batch[2]
         
         outputs = model(b_input_ids, token_type_ids=None, attention_mask=b_input_mask)
         #logits = outputs[0]
@@ -154,9 +154,9 @@ recall = Recall(output_transform=output_transform_fun, average=False)
 #.detach().cpu().numpy()
 F1 = (precision * recall * 2) / (precision + recall)
 
-precision.attach(train_evaluator, 'precision')
-recall.attach(train_evaluator, 'recall')
-F1.attach(train_evaluator, 'F1')
+#precision.attach(train_evaluator, 'precision')
+#recall.attach(train_evaluator, 'recall')
+#F1.attach(train_evaluator, 'F1')
 
 ### Validation    
 #Accuracy(output_transform=output_transform_fun).attach(validation_evaluator, 'accuracy')

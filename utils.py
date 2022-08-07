@@ -14,11 +14,8 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, classification_report, f1_score, precision_score, recall_score
 from pathlib import Path
-import re
-import torchtext
-import glob
-from torchtext import data
-from torchtext.data import Field
+
+from torch.utils.data import DataLoader
 
 
 if torch.cuda.is_available():       
@@ -83,27 +80,19 @@ def get_iterator(X_cur, y_cur, cur_model, is_train):
     #print(f'type of attention_masks: {type(attention_masks)}')
     #print(f'type of attention_masks[0]: {type(attention_masks[0])}')
     labels = torch.from_numpy(np.array(y_cur, dtype='int64'))
+
+    input_ids_tensor = torch.tensor(input_ids)
+    attention_masks_tensor = torch.tensor(attention_masks)
+
+    input_ids_tensor = input_ids_tensor.to(device)
+    attention_masks_tensor = attention_masks_tensor.to(device)
+    labels = labels.to(device)
+
+
+    loader = DataLoader(TensorDataset(input_ids_tensor, attention_masks_tensor, labels), batch_size=BATCH_SIZE)
+
     
-    INPUT_IDS=Field(sequential=False, use_vocab=False, batch_first=True)
-    ATTENTION_MASKS=Field(sequential=False, use_vocab=False, batch_first=True)
-    LABEL=Field(sequential=False, use_vocab=False, batch_first=True)
-    
-    fields=[
-        ('INPUT_IDS', INPUT_IDS),
-        ('ATTENTION_MASKS', ATTENTION_MASKS),
-        ('LABEL', LABEL)
-    ]
-    examples=[]
-    for i in range(len(labels)):
-        examples.append(data.Example.fromlist([input_ids[i],
-                                               attention_masks[i],
-                                               labels[i]],
-                                               fields))
-    
-    
-    cur_dataset = torchtext.data.Dataset(examples, fields)
-    cur_iterator = data.BucketIterator(cur_dataset, batch_size=BATCH_SIZE, device=device, shuffle=is_train)
-    return cur_iterator
+    return loader
 
 def preprocessing_for_classifier_tensor(sentences, cur_model):
     tokenizer=cur_model[1].from_pretrained(cur_model[2])

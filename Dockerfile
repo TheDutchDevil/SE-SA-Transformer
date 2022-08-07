@@ -1,4 +1,4 @@
-FROM continuumio/anaconda3
+FROM gpuci/miniconda-cuda:11.3-base-ubuntu20.04
 
 WORKDIR /app
 
