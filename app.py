@@ -51,7 +51,7 @@ train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, stratif
 
 
 
-m_num=0
+m_num=3
 rerun_flag=True
     
 
@@ -162,9 +162,9 @@ F1 = (precision * recall * 2) / (precision + recall)
 #Accuracy(output_transform=output_transform_fun).attach(validation_evaluator, 'accuracy')
 Loss(criterion).attach(validation_evaluator, 'cross-entropy')
 
-precision.attach(validation_evaluator, 'precision')
-recall.attach(validation_evaluator, 'recall')
-F1.attach(validation_evaluator, 'F1')
+#precision.attach(validation_evaluator, 'precision')
+#recall.attach(validation_evaluator, 'recall')
+#F1.attach(validation_evaluator, 'F1')
 
 #### Progress Bar
 pbar = ProgressBar(persist=True, bar_format="")
@@ -229,7 +229,7 @@ trainer.run(train_iterator, max_epochs=4)
 
 predictions = run_model(prediction_dataloader, model)
 
-output_df = pd.DataFrame({'Prediction': predictions, 'GroundTruth': test_y, 'Text': test_X})
+output_df = pd.DataFrame({'Prediction': predictions, 'GroundTruth': test_y, 'Text': test_X_sentences})
 
 
 output_df['Prediction']=output_df['Prediction'].replace({1:'positive', 2:'negative', 0:'neutral'})
