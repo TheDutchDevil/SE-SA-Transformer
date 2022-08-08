@@ -72,7 +72,7 @@ prediction_dataloader=get_dataloader(test_X_sentences, test_y, cur_model, False)
 X_train, X_validation, y_train, y_validation = train_test_split(train_X_sentences, 
                                                         train_y, 
                                                         test_size=0.05, 
-                                                        random_state=SEED,
+                                                        random_state=args.stratified_seed,
                                                         stratify=train_y)
 
 #train_dataloader=get_dataloader(X_train, y_train,cur_model,True)
@@ -218,7 +218,7 @@ cp_handler = Checkpoint(to_save,
                     score_function=score_function_loss,
                     score_name='val_loss')
 
-validation_evaluator.add_event_handler(Events.COMPLETED, cp_handler)
+#validation_evaluator.add_event_handler(Events.COMPLETED, cp_handler)
 #trainer.add_event_handler(Events.ITERATION_COMPLETED(every=1000), cp_handler)
 
 # checkpointer = ModelCheckpoint('../models/', '{}'.format(p_name), create_dir=True, save_as_state_dict=True, require_empty=False)
