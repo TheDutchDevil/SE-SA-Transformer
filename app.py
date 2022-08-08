@@ -237,4 +237,6 @@ output_df['GroundTruth']=output_df['GroundTruth'].replace({1:'positive', 2:'nega
 
 output_df.to_csv(f'{args.run_name}.csv', index=False)
 
+print(f"Saved to {args.run_name}.csv")
+
 
