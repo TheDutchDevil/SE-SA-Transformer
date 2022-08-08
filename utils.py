@@ -50,11 +50,12 @@ EPS=1e-8
 WEIGHT_DECAY=1e-5
 
 def seed_torch(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)
-    torch.backends.cudnn.deterministic=True
+    pass
+    # random.seed(seed)
+    # np.random.seed(seed)
+    # torch.manual_seed(seed)
+    # torch.cuda.manual_seed(seed)
+    # torch.backends.cudnn.deterministic=True
 
 seed_torch(SEED)
 
