@@ -42,7 +42,7 @@ input_df = pd.read_csv(input_file_name)
 if "id" not in input_df.columns:
     input_df["id"] = input_df.index
 
-input_df['polarity']=input_df['polarity'].replace({'positive':1, 'negative':2, 'neutral':0})
+input_df['polarity']=input_df['polarity'].replace({'positive':1, 'negative':-1, 'neutral':0})
 
 
 X, y = input_df[['id', 'text']], input_df['polarity']
