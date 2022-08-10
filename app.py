@@ -232,8 +232,8 @@ predictions = run_model(prediction_dataloader, model)
 output_df = pd.DataFrame({'Prediction': predictions, 'GroundTruth': test_y, 'Text': test_X_sentences})
 
 
-output_df['Prediction']=output_df['Prediction'].replace({1:'positive', 2:'negative', 0:'neutral'})
-output_df['GroundTruth']=output_df['GroundTruth'].replace({1:'positive', 2:'negative', 0:'neutral'})
+output_df['Prediction']=output_df['Prediction'].replace({1:'positive', -1:'negative', 0:'neutral'})
+output_df['GroundTruth']=output_df['GroundTruth'].replace({1:'positive', -1:'negative', 0:'neutral'})
 
 output_df.to_csv(f'{args.run_name}.csv', index=False)
 
