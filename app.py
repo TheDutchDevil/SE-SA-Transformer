@@ -1,5 +1,6 @@
 # Created by happygirlzt
 # -*- coding: utf-8 -*-
+from calendar import EPOCH
 import sys
 sys.path.append('/media/DATA/tingzhang-data/sa4se/scripts')
 
@@ -224,7 +225,7 @@ cp_handler = Checkpoint(to_save,
 # checkpointer = ModelCheckpoint('../models/', '{}'.format(p_name), create_dir=True, save_as_state_dict=True, require_empty=False)
 
 # trainer.add_event_handler(Events.ITERATION_COMPLETED, TerminateOnNan())
-trainer.run(train_iterator, max_epochs=4)
+trainer.run(train_iterator, max_epochs=EPOCHS)
 
 
 predictions = run_model(prediction_dataloader, model)
