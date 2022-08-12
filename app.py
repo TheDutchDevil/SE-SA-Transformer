@@ -42,14 +42,14 @@ input_df = pd.read_csv(input_file_name)
 if "id" not in input_df.columns:
     input_df["id"] = input_df.index
 
-input_df['polarity']=input_df['polarity'].replace({'positive':1, 'negative':-1, 'neutral':0})
 
 
 X, y = input_df[['id', 'text']], input_df['polarity']
 
 train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, stratify=y, random_state=args.stratified_seed)
 
-
+train_y = train_y.replace({'positive': 1, 'neutral': 0, 'negative': 2})
+test_y = test_y.replace({'positive': 1, 'neutral': 0, 'negative': 2})
 
 m_num=0
 rerun_flag=True
@@ -232,8 +232,8 @@ predictions = run_model(prediction_dataloader, model)
 output_df = pd.DataFrame({'Prediction': predictions, 'GroundTruth': test_y, 'Text': test_X_sentences})
 
 
-output_df['Prediction']=output_df['Prediction'].replace({1:'positive', -1:'negative', 0:'neutral'})
-output_df['GroundTruth']=output_df['GroundTruth'].replace({1:'positive', -1:'negative', 0:'neutral'})
+output_df['Prediction']=output_df['Prediction'].replace({1:'positive', 2:'negative', 0:'neutral'})
+output_df['GroundTruth']=output_df['GroundTruth'].replace({1:'positive', 2:'negative', 0:'neutral'})
 
 output_df.to_csv(f'{args.run_name}.csv', index=False)
 
