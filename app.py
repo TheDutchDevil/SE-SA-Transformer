@@ -53,7 +53,7 @@ def main():
     input_file_name = args.input
 
     if args.train:
-        train(input_file_name, args)
+        train(input_file_name, text_column=args.text_column, label_column=args.label_column)
 
 def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None):
 
