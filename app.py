@@ -7,7 +7,7 @@ sys.path.append('/media/DATA/tingzhang-data/sa4se/scripts')
 from utils import *
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
-from sklearn.metric import classification_report
+from sklearn.metrics import classification_report
 import argparse
 import pprint
 import math
