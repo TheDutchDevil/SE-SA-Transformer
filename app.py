@@ -264,8 +264,8 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     output_df = pd.DataFrame({'Prediction': predictions, 'GroundTruth': test_y, 'Text': test_X_sentences})
 
 
-    output_df['Prediction'] = encoder.reverse_transform(output_df['Prediction'])
-    output_df['GroundTruth'] = encoder.reverse_transform(output_df['GroundTruth'])
+    output_df['Prediction'] = encoder.inverse_transform(output_df['Prediction'])
+    output_df['GroundTruth'] = encoder.inverse_transform(output_df['GroundTruth'])
 
     
     print(classification_report(output_df['GroundTruth'], output_df['Prediction']))
