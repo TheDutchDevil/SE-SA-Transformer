@@ -104,7 +104,7 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     X_train, X_validation, y_train, y_validation = train_test_split(train_X_sentences, 
                                                             train_y, 
                                                             test_size=0.05, 
-                                                            random_state=args.stratified_seed,
+                                                            random_state=stratified_seed,
                                                             stratify=train_y)
 
     #train_dataloader=get_dataloader(X_train, y_train,cur_model,True)
