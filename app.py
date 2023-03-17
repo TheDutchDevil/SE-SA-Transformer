@@ -68,11 +68,15 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     if "id" not in input_df.columns:
         input_df["id"] = input_df.index
 
-
+    if text_column not in input_df.columns:
+        raise ValueError(f"No text column named {text_column} found in input file")
+    
+    if label_column not in input_df.columns:
+        raise ValueError(f"No label column named {label_column} found in input file")
 
     X, y = input_df[['id', text_column]], input_df[label_column]
 
-    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, stratify=y, random_state=args.stratified_seed)
+    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, stratify=y, random_state=stratified_seed)
 
     encoder = LabelEncoder()
 
