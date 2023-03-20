@@ -117,8 +117,8 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     #train_dataloader=get_dataloader(X_train, y_train,cur_model,True)
     #validation_dataloader=get_dataloader(X_validation, y_validation,cur_model,False)
 
-    train_iterator=get_iterator(X_train, y_train, cur_model, True)
-    valid_iterator=get_iterator(X_validation, y_validation, cur_model, False)
+    train_iterator=get_iterator(X_train, y_train, cur_model)
+    valid_iterator=get_iterator(X_validation, y_validation, cur_model)
 
     model = cur_model[0].from_pretrained(cur_model[2], num_labels=len(encoder.classes_))
 
@@ -293,9 +293,6 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
 
     if text_column not in df_predict.columns:
         raise ValueError(f"No text column named {text_column} found in input file")
-    
-    if label_column not in df_predict.columns:
-        raise ValueError(f"No label column named {label_column} found in input file")
 
     X, y = df_predict[['id', text_column]], df_predict[label_column]
 
