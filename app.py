@@ -294,12 +294,10 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
     if text_column not in df_predict.columns:
         raise ValueError(f"No text column named {text_column} found in input file")
 
-    X, y = df_predict[['id', text_column]], df_predict[label_column]
+    X = df_predict[['id', text_column]]
 
     encoder = LabelEncoder()
     encoder.classes_ = np.load(f'models/encoder_{model_name}.npy')
-
-    y = encoder.transform(y)
 
     m_num=0
     
