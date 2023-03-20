@@ -62,12 +62,11 @@ seed_torch(SEED)
 
 def get_dataloader(X_cur, y_cur, cur_model, shuffle = True):
     input_ids, attention_masks = preprocessing_for_classifier_tensor(X_cur.values, cur_model)
-    
-    labels = torch.from_numpy(np.array(y_cur, dtype='int64'))
 
     if y_cur is None:
         cur_dataset = TensorDataset(input_ids, attention_masks)
-    else:
+    else:    
+        labels = torch.from_numpy(np.array(y_cur, dtype='int64'))
         cur_dataset = TensorDataset(input_ids, attention_masks, labels)
     
     cur_dataloader = DataLoader(
