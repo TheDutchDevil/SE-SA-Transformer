@@ -297,7 +297,7 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
     X = df_predict[['id', text_column]]
 
     encoder = LabelEncoder()
-    encoder.classes_ = np.load(f'models/encoder_{model_name}.npy')
+    encoder.classes_ = np.load(f'models/encoder_{model_name}.npy', allow_pickle=True)
 
     m_num=0
     
