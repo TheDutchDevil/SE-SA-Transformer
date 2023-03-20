@@ -277,7 +277,7 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     
     print(classification_report(output_df['GroundTruth'], output_df['Prediction']))
 
-    model.save_model(f'models/bert_{model_name}.model')
+    model.save_pretrained(f'models/bert_{model_name}/')
 
     np.save(f'models/encoder_{model_name}.npy', encoder.classes_)
 
