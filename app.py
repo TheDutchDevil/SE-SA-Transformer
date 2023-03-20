@@ -303,7 +303,7 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
     
     cur_model=MODELS[m_num]
 
-    sentences = X[text_column].values
+    sentences = X[text_column]
     
     prediction_dataloader = get_dataloader(sentences, None, cur_model, False)
 
