@@ -59,6 +59,9 @@ def main():
     if args.train:
         train(input_file_name, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name)
 
+    if args.predict:
+        predict(input_file_name, args.output, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name)
+
 def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None, model_name = "default"):
 
     if not Path(file_name).exists():
