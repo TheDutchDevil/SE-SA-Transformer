@@ -4,6 +4,8 @@ from calendar import EPOCH
 import sys
 sys.path.append('/media/DATA/tingzhang-data/sa4se/scripts')
 
+import numpy as np
+
 from utils import *
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
@@ -38,6 +40,8 @@ def main():
 
     # The two columns can be used to deal with non-standard dataset files. 
 
+    parser.add_argument("--model-name", dest="model_name", help="", type=str)
+
     parser.add_argument("--text-column", dest="text_column", help="", type=str, default="text")
 
     parser.add_argument("--label-column", dest="label_column", help="", type=str, default="label")
@@ -53,9 +57,9 @@ def main():
     input_file_name = args.input
 
     if args.train:
-        train(input_file_name, text_column=args.text_column, label_column=args.label_column)
+        train(input_file_name, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name)
 
-def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None):
+def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None, model_name = "default"):
 
     if not Path(file_name).exists():
         raise ValueError(f"No input file found at {file_name}")
@@ -113,7 +117,7 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
     train_iterator=get_iterator(X_train, y_train, cur_model, True)
     valid_iterator=get_iterator(X_validation, y_validation, cur_model, False)
 
-    model = cur_model[0].from_pretrained(cur_model[2], num_labels=3)
+    model = cur_model[0].from_pretrained(cur_model[2], num_labels=len(encoder.classes_))
 
     if torch.cuda.is_available():
         model.cuda()
@@ -269,6 +273,54 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
 
     
     print(classification_report(output_df['GroundTruth'], output_df['Prediction']))
+
+    trainer.save_model(f'models/bert_{model_name}.model')
+
+    np.save(f'models/encoder_{model_name}.npy', encoder.classes_)
+
+
+def predict(file_name, output_file, model_name, text_column = "text", label_column = "label"):
+    df_predict = pd.read_csv(file_name)
+
+
+    df_predict.columns= df_predict.columns.str.lower()
+
+    if "id" not in df_predict.columns:
+        df_predict["id"] = df_predict.index
+
+    if text_column not in df_predict.columns:
+        raise ValueError(f"No text column named {text_column} found in input file")
+    
+    if label_column not in df_predict.columns:
+        raise ValueError(f"No label column named {label_column} found in input file")
+
+    X, y = df_predict[['id', text_column]], df_predict[label_column]
+
+    encoder = LabelEncoder()
+    encoder.classes_ = np.load(f'models/encoder_{model_name}.npy')
+
+    y = encoder.transform(y)
+
+    m_num=0
+    
+    cur_model=MODELS[m_num]
+
+    sentences = X[text_column].values
+    
+    prediction_dataloader = get_dataloader(sentences, None, cur_model, False)
+
+    model = cur_model[0].from_pretrained(f'models/bert_{model_name}.model', num_labels=len(encoder.classes_), local_files_only = True)
+
+    if torch.cuda.is_available():
+        model.cuda()
+
+    predictions = run_model(prediction_dataloader, model)
+
+    df_predict[label_column] = encoder.inverse_transform(predictions)
+
+    df_predict.to_csv(output_file, index=False)
+
+    print("Saved output file to {}".format(output_file))
 
 if __name__ == '__main__':
     main()
