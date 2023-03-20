@@ -312,7 +312,7 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
     if torch.cuda.is_available():
         model.cuda()
 
-    predictions = run_model(prediction_dataloader, model)
+    predictions = run_model_without_ground_truth(prediction_dataloader, model)
 
     df_predict[label_column] = encoder.inverse_transform(predictions)
 

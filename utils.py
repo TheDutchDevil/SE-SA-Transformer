@@ -181,7 +181,7 @@ def run_model(prediction_dataloader, model):
 
     return flat_predictions
 
-def run_model_without_ground_turth(prediction_dataloader, model):
+def run_model_without_ground_truth(prediction_dataloader, model):
     
     model.eval()
     predictions = []
