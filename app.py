@@ -307,7 +307,7 @@ def predict(file_name, output_file, model_name, text_column = "text", label_colu
     
     prediction_dataloader = get_dataloader(sentences, None, cur_model, False)
 
-    model = cur_model[0].from_pretrained(f'models/bert_{model_name}.model', num_labels=len(encoder.classes_), local_files_only = True)
+    model = cur_model[0].from_pretrained(f'models/bert_{model_name}', num_labels=len(encoder.classes_), local_files_only = True)
 
     if torch.cuda.is_available():
         model.cuda()
