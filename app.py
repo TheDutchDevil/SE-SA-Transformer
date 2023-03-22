@@ -46,7 +46,9 @@ def main():
 
     parser.add_argument("--label-column", dest="label_column", help="", type=str, default="label")
 
-    parser.add_argument("--stratified-seed", dest="stratified_seed", help="Seed for the stratified split", type=int, default=None)
+    parser.add_argument("--seed", dest="seed", help="Seed for the stratified split", type=int, default=None)
+
+    parser.add_argument("--test-split", dest="test_split", help="Portion of the train set that will be used for the test split", type=float, default=0.3)
 
     args = parser.parse_args()
 
@@ -57,12 +59,12 @@ def main():
     input_file_name = args.input
 
     if args.train:
-        train(input_file_name, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name)
+        train(input_file_name, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name, stratified_seed=args.seed, test_split_portion = args.test_split)
 
     if args.predict:
         predict(input_file_name, args.output, text_column=args.text_column, label_column=args.label_column, model_name = args.model_name)
 
-def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None, model_name = "default"):
+def train(file_name, text_column = "text", label_column = "polarity", stratified_seed = None, model_name = "default", test_split_portion = 0.3):
 
     if not Path(file_name).exists():
         raise ValueError(f"No input file found at {file_name}")
@@ -83,7 +85,7 @@ def train(file_name, text_column = "text", label_column = "polarity", stratified
 
     X, y = input_df[['id', text_column]], input_df[label_column]
 
-    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, stratify=y, random_state=stratified_seed)
+    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=test_split_portion, stratify=y, random_state=stratified_seed)
 
     encoder = LabelEncoder()
 
